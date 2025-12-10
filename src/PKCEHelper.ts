@@ -4,7 +4,7 @@ export function generateCodeVerifier(): string {
     return Array.from(arr, dec => ("0" + dec.toString(16)).substr(-2)).join('');
 }
 
-export async function generateCodeChallenge(codeVerifier: string) {
+export async function generateCodeChallenge(codeVerifier: string): string {
     const encoder = new TextEncoder();
     const data = encoder.encode(codeVerifier);
 
@@ -14,4 +14,11 @@ export async function generateCodeChallenge(codeVerifier: string) {
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=+$/, "");
+}
+
+export async function generatePKCECredentials() {
+  const codeVerifier = generateCodeVerifier();
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
+  sessionStorage.setItem("codeChallenge", codeChallenge)
+  return codeChallenge;
 }

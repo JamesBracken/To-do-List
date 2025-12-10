@@ -2,28 +2,30 @@ import './App.css';
 import Nav from './components/navBar/nav';
 import ToDoList from './components/toDoList/ToDoList';
 import AddTask from './components/addTask.tsx/AddTask';
-import { logIn, loginTest } from './login';
+import { loginTest } from './login';
 import config from "./config.json";
-import { generateCodeVerifier, generateCodeChallenge } from './PKCEHelper';
+import { generatePKCECredentials } from './PKCEHelper';
+import { useEffect, useState } from 'react';
 
-async function generatePKCE() {
-  const codeVerifier = generateCodeVerifier();
-  const codeChallenge = await generateCodeChallenge(codeVerifier);
-  sessionStorage.setItem("codeChallenge", codeChallenge)
-  console.log("generateCodeVerifier:", codeVerifier)
-  console.log("generateCodeChallenge:", codeChallenge)
-  console.log("generatedPKCE", sessionStorage.getItem("codeChallenge"))
-}
 
 function App() {
-  generatePKCE()
+  const [PKCECredentials, setPKCECredentials]= useState<string | null>(null);
+
+  useEffect(() => {
+    async function getPKCE() {
+
+      const PKCECredentials = await generatePKCECredentials()
+      setPKCECredentials(PKCECredentials)
+    }
+    getPKCE()
+  }, [])
   return (
     <>
       <button id='counter' onClick={() => {
         loginTest()
       }
       }>Click me</button>
-      <Nav />
+      <Nav PKCECredentials={PKCECredentials}/>
       <AddTask />
       <ToDoList />
     </>
