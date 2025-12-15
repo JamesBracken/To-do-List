@@ -11,7 +11,6 @@ const AuthCallbackPage = () => {
     useEffect(() => {
         (async () => {
             try {
-                console.log("AuthProvider:", tokens)
                 const codeVerifier = sessionStorage.getItem("codeVerifier");
                 if (!codeVerifier) {
                     console.error("codeVerifier not found")
@@ -47,12 +46,14 @@ const AuthCallbackPage = () => {
                 setTokens(json);
 
                 sessionStorage.removeItem("codeVerifier")
-                console.log("tokens:", json)
+                console.log("AuthProvider:", tokens)
+                // console.log("tokens:", json)
             } catch (e) {
                 console.error("Unexpected error fetching tokens", e)
             }
         })()
     }, [])
+
     return (
         <>
             <h1>Auth callback</h1>
