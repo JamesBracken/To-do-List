@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }) => {
 
     if(tokens !== null && user?.exp === null) throw new Error("Tokens present but user authentication expiry not found")
     const isAuthenticated = currentTime != user?.exp && currentTime <= user?.exp
-    
     return (
         <AuthContext value={{ tokens, setTokens, user, isAuthenticated }}>
             {children}

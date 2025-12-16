@@ -1,58 +1,60 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import config from "../config.json";
 import useAuth from "../hooks/useAuth";
+
 const AuthCallbackPage = () => {
+    const authInfo = useAuth();
+    const navigate = useNavigate();
+
+    const { tokens, setTokens, isAuthenticated } = authInfo;
     const authReturnedCode = window.location.search.split("&")[0]
         .replace("?code=", "")
-    const authInfo = useAuth();
-    const {tokens, setTokens, isAuthenticated } = authInfo;
+
     if (!authInfo) throw new Error("Error fetching authentication information")
-        useEffect(() => {
-            (async () => {
-                try {
-                    const codeVerifier = sessionStorage.getItem("codeVerifier");
-                    if (!codeVerifier) {
-                        console.error("codeVerifier not found")
-                    }
-
-                    if (!authReturnedCode) {
-                        console.error("authReturnedCode not found")
-                    }
-
-                    const params = new URLSearchParams({
-                        grant_type: "authorization_code",
-                        client_id: config.amplify.userPoolClientId,
-                        code: authReturnedCode,
-                        redirect_uri: "http://localhost:5173/auth-callback",
-                        code_verifier: codeVerifier,
-                    });
-
-                    const response = await fetch("https://eu-north-1dsoci5dtk.auth.eu-north-1.amazoncognito.com/oauth2/token", {
-                        method: "POST",
-                        body: params.toString(),
-                        headers: {
-                            "Content-type": "application/x-www-form-urlencoded",
-                            "Accept": "application/json"
-                        }
-                    })
-
-                    if (!response.ok) {
-                        console.error(`token request failure status code:${response.status}`)
-                    }
-
-                    const json = await response.json()
-
-                    setTokens(json);
-
-                    sessionStorage.removeItem("codeVerifier")
-                    console.log("AuthProvider:", tokens)
-                    if(isAuthenticated) window.location.href = `https://eu-north-1dsoci5dtk.auth.eu-north-1.amazoncognito.com/login/continue?client_id=o817ick1fj45frs5gg42nv0sq&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fauth-callback&response_type=code&scope=email+openid+profile&code_challenge=${PKCECredentials}&code_challenge_method=S256`
-
-                } catch (e) {
-                    console.error("Unexpected error fetching tokens", e)
+    useEffect(() => {
+        (async () => {
+            try {
+                const codeVerifier = sessionStorage.getItem("codeVerifier");
+                if (!codeVerifier) {
+                    console.error("codeVerifier not found")
                 }
-            })()
-        }, [])
+
+                if (!authReturnedCode) {
+                    console.error("authReturnedCode not found")
+                }
+
+                const params = new URLSearchParams({
+                    grant_type: "authorization_code",
+                    client_id: config.amplify.userPoolClientId,
+                    code: authReturnedCode,
+                    redirect_uri: "http://localhost:5173/auth-callback",
+                    code_verifier: codeVerifier,
+                });
+
+                const response = await fetch("https://eu-north-1dsoci5dtk.auth.eu-north-1.amazoncognito.com/oauth2/token", {
+                    method: "POST",
+                    body: params.toString(),
+                    headers: {
+                        "Content-type": "application/x-www-form-urlencoded",
+                        "Accept": "application/json"
+                    }
+                })
+
+                if (!response.ok) {
+                    console.error(`token request failure status code:${response.status}`)
+                }
+
+                const json = await response.json()
+                setTokens(json);
+                sessionStorage.removeItem("codeVerifier")
+                navigate("/")
+            } catch (e) {
+                console.error("Unexpected error fetching tokens", e)
+            }
+        })()
+    }, [])
     return (
         <>
             <h1>Auth callback</h1>
