@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     const user = tokens?.id_token && !tokens.error ? jwtDecode(tokens.id_token) : null;
     const date = new Date;
     const currentTime = parseInt(date.getTime().toString().slice(0, -3));
-
+console.log("User:", user)
     if(tokens !== null && user?.exp === null) throw new Error("Tokens present but user authentication expiry not found")
     const isAuthenticated = currentTime != user?.exp && currentTime <= user?.exp
     return (
