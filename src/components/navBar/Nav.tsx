@@ -1,9 +1,15 @@
+import { Link } from "react-router-dom";
+import { handleLogin, handleLogout } from "../../authHandlers";
+
 const Nav = () => {
+
     return (
         <>
             <nav>
-                <a href="">Login</a>
+                <Link to="/">Home</Link>
+                <button onClick={() => handleLogin()}>Cognito login btn</button>
                 <a href="">Signup</a>
+                <a onClick={() => handleLogout()}>Logout</a>
             </nav>
         </>
     )

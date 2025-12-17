@@ -1,15 +1,24 @@
 import './App.css';
-import Nav from './components/navBar/nav';
-import ToDoList from './components/toDoList/ToDoList';
-import AddTask from './components/addTask.tsx/AddTask';
-function App() {
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import Nav from './components/navBar/Nav';
+import Home from './pages/Home';
+import AuthCallbackPage from './pages/AuthCallbackPage';
+import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
+
+function App() {
   return (
-    <>
+    <BrowserRouter>
       <Nav />
-      <AddTask />
-      <ToDoList />
-    </>
+      <Routes>
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        } />
+        <Route path="/auth-callback" element={<AuthCallbackPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
