@@ -13,8 +13,8 @@ export const useAuth = () => {
 export const useHandleLogout = () => {
     const context = useContext(AuthContext)
     const codeVerifier = sessionStorage.getItem("codeVerifier");
-    return () => {
-        //Ensure clean auth state before login redirection
+    const logoutFunction = () => {
+        //Ensure clean auth state before attempting login redirection
         if (context) {
             const { setTokens } = context;
             setTokens(null);
@@ -22,5 +22,6 @@ export const useHandleLogout = () => {
         if (codeVerifier) sessionStorage.removeItem("codeVerifier")
         window.location.href = `${COGNITO_BASE_URL}logout?client_id=${config.amplify.userPoolClientId}&logout_uri=http%3A%2F%2Flocalhost%3A5173%2F`
     }
+    return logoutFunction;
 
 }

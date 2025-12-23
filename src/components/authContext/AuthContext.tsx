@@ -1,6 +1,7 @@
 import { jwtDecode, type JwtPayload } from "jwt-decode";
 import { useState } from "react";
 import { createContext } from "react";
+import { isTokenExpired } from "../../authHelper";
 
 type AuthContextType = {
     tokens: Tokens | null,
@@ -36,13 +37,12 @@ export const AuthProvider = ({ children }) => {
     const user = tokens?.id_token && !tokens.error ? jwtDecode(tokens.id_token) : null;
     if (tokens !== null && user?.exp === null) throw new Error("Tokens present but user authentication expiry not found")
 
-    const date = new Date;
-    const currentTime = parseInt(date.getTime().toString().slice(0, -3));
     console.log("User:", user)
-    let isAuthenticated = false;
-    if (tokens !== null && user.exp) {
-        isAuthenticated = currentTime != user?.exp && currentTime <= tokenExpiry
+    let isAuthTokenExpired = false;
+    if (user && user.exp) {
+        isAuthTokenExpired = isTokenExpired(user?.exp);
     }
+    const isAuthenticated = isAuthTokenExpired;
     return (
         <AuthContext value={{ tokens, setTokens, user, isAuthenticated }}>
             {children}

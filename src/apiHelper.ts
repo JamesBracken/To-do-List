@@ -1,24 +1,30 @@
 import { API_BASE_URL } from "./constants";
 import { handleLogin } from "./authHandlers";
+import { isTokenExpired } from "./authHelper";
 
 type apiGetParams = {
     endpoint: string,
-    accessToken: string
+    accessToken: string,
+    tokenExpiry: number,
+    logout: () => void
 }
 
 type apiPostParams = {
     endpoint: string,
     accessToken: string,
+    tokenExpiry: number,
+    logout: () => void
     body: object
 }
 
 const api = {
-    get: function ({ endpoint, accessToken }: apiGetParams) {
+    get: function ({ endpoint, accessToken, tokenExpiry, logout }: apiGetParams) {
+        const isAuthTokenExpired = isTokenExpired(tokenExpiry)
+        if (isAuthTokenExpired) logout();
         if (!accessToken) {
             console.error("Access token missing from GET request")
-            handleLogin()
+            logout()
         }
-        if()
         try {
             fetch(`${API_BASE_URL}${endpoint}`,
                 {
@@ -31,10 +37,9 @@ const api = {
                 .then(res => {
                     if (res.ok) {
                         return res.json()
-                    }
-                    else if (res.status === 401) {
+                    } else if (res.status === 401 || res.status === 403) {
                         console.error("Forbidden or unauthorized request, redirecting to login")
-                        handleLogin();
+                        logout();
                     }
                 }).then(data => {
                     return data;
@@ -44,10 +49,12 @@ const api = {
         }
     }
     ,
-    post: function ({ endpoint, accessToken, body }: apiPostParams) {
+    post: function ({ endpoint, accessToken, tokenExpiry, logout, body }: apiPostParams) {
+        const isAuthTokenExpired = isTokenExpired(tokenExpiry)
+        if (isAuthTokenExpired) logout();
         if (!accessToken) {
             console.error("Access token missing from POST request")
-            handleLogin()
+            logout()
         }
 
         try {
@@ -63,10 +70,9 @@ const api = {
                 if (res.ok) {
                     console.log(res.json())
                     return res.json()
-                }
-                else if (res.status === 401) {
+                } else if (res.status === 401 || res.status === 403) {
                     console.error("Forbidden or unauthorized request, redirecting to login")
-                    handleLogin();
+                    logout();
                 }
             }).then(data => {
                 return data;
