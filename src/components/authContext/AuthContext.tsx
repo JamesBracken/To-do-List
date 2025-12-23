@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     if (user && user.exp) {
         isAuthTokenExpired = isTokenExpired(user?.exp);
     }
-    const isAuthenticated = isAuthTokenExpired;
+    const isAuthenticated = !isAuthTokenExpired;
     return (
         <AuthContext value={{ tokens, setTokens, user, isAuthenticated }}>
             {children}
