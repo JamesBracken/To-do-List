@@ -14,8 +14,11 @@ type apiPostParams = {
 
 const api = {
     get: function ({ endpoint, accessToken }: apiGetParams) {
-        if (!accessToken) throw new Error("Access token missing from GET request")
-
+        if (!accessToken) {
+            console.error("Access token missing from GET request")
+            handleLogin()
+        }
+        if()
         try {
             fetch(`${API_BASE_URL}${endpoint}`,
                 {
@@ -42,7 +45,10 @@ const api = {
     }
     ,
     post: function ({ endpoint, accessToken, body }: apiPostParams) {
-        if (!accessToken) throw new Error("Access token missing from POST request")
+        if (!accessToken) {
+            console.error("Access token missing from POST request")
+            handleLogin()
+        }
 
         try {
             fetch(`${API_BASE_URL}${endpoint}`,
