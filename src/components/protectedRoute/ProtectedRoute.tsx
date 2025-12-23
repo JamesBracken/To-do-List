@@ -1,6 +1,5 @@
 import { handleLogin } from "../../authHandlers";
-import useAuth from "../../hooks/useAuth";
-// import { COGNITO_LOGIN_URL } from "../../constants";
+import { useAuth } from "../../hooks/authHooks";
 import { generatePKCECredentials } from "../../PKCEHelper";
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, tokens } = useAuth();
@@ -9,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
         console.log("tokens", tokens)
     }
     console.log("tokens !== null", tokens !== null)
-    console.log("!isAuthenticated", !isAuthenticated)
+    console.log("isAuthenticated", isAuthenticated)
 
     if (!tokens || (tokens && tokens?.error)) {
         console.log("if invoking")
