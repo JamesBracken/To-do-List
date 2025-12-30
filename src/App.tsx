@@ -13,9 +13,7 @@ function App() {
     <BrowserRouter>
       <Nav />
       <Routes>
-        <Route path="/" element={
-          <Home />
-        } />
+        <Route path="/" element={<Home />} />
         <Route path="/auth-callback" element={<AuthCallbackPage />} />
         <Route path="/to-do-list" element={
           <TaskProvider>

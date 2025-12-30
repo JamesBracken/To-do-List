@@ -8,7 +8,7 @@ const AuthCallbackPage = () => {
     const authInfo = useAuth();
     const navigate = useNavigate();
 
-    const { tokens, setTokens, isAuthenticated } = authInfo;
+    const { setTokens } = authInfo;
     const authReturnedCode = window.location.search.split("&")[0]
         .replace("?code=", "")
 
@@ -16,10 +16,8 @@ const AuthCallbackPage = () => {
     useEffect(() => {
         (async () => {
             try {
-                const codeVerifier = sessionStorage.getItem("codeVerifier");
-                if (!codeVerifier) {
-                    console.error("codeVerifier not found")
-                }
+                const codeVerifier= sessionStorage.getItem("codeVerifier");
+                if (!codeVerifier) throw new Error("codeVerifier not found")
 
                 if (!authReturnedCode) {
                     console.error("authReturnedCode not found")
@@ -52,6 +50,7 @@ const AuthCallbackPage = () => {
                 navigate("/")
             } catch (e) {
                 console.error("Unexpected error fetching tokens", e)
+
             }
         })()
     }, [])
