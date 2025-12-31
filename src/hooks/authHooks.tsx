@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext, type CognitoIdTokenPayload, type Tokens } from "../components/authContext/AuthContext";
+import { AuthContext } from "../components/authContext/AuthContext";
 import { COGNITO_BASE_URL } from "../constants";
 import config from "../config.json";
 
