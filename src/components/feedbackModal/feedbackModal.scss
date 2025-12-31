@@ -1,10 +1,4 @@
-@use "../components/feedbackModal/feedbackModal.scss";
-
-body {
-    margin: 0px;
-}
-
-.task-update-modal {
+.feedback-modal {
     display: flex;
     position: absolute;
     top: 0px;
@@ -24,22 +18,20 @@ body {
         opacity: 50%;
     }
 
-    &__foreground {
+    &__foreground,
+    &__foreground-error {
         padding: 50px 10px;
         flex-direction: column;
         z-index: 10;
         position: absolute;
-        background-color: white;
+        background-color: rgb(187, 255, 187);
         border-radius: 10px;
         align-self: center;
         justify-content: center;
     }
 
-    input[type="text"] {
-        display: block;
+    &__foreground-error {
+        background-color: rgb(255, 161, 152);
     }
 
-    label {
-        display: block;
-    }
 }
