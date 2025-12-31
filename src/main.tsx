@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './components/authContext/AuthContext.tsx'
+import { FeedbackProvider } from './components/userFeedbackContext/UserFeedbackContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>
-    <AuthProvider>
+  <AuthProvider>
+    <FeedbackProvider>
       <App />
-    </AuthProvider>
+    </FeedbackProvider>
+  </AuthProvider>
   // </StrictMode>,
 )
