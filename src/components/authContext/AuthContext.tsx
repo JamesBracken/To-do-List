@@ -38,11 +38,12 @@ export const AuthProvider = ({ children }) => {
     const [tokens, setTokens] = useState<Tokens | null>(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [user, setUser] = useState<CognitoIdTokenPayload>(null);
-    if(tokens !== null && user === null) setUser(tokens?.id_token && !tokens.error ? jwtDecode(tokens.id_token) : null)
+    if (tokens !== null && user === null) setUser(tokens?.id_token && !tokens.error ? jwtDecode(tokens.id_token) : null)
 
     if (tokens !== null && user?.exp === null) throw new Error("Tokens present but user authentication expiry not found")
-
-    if (user && user.exp) setIsAuthenticated(!user?.exp)
+    if (user && user.exp && !isAuthenticated) {
+        setIsAuthenticated(!isTokenExpired(user.exp))
+    }
 
     return (
         <AuthContext value={{ tokens, setTokens, user, setUser, isAuthenticated, setIsAuthenticated }}>
