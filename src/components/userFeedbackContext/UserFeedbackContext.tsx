@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 
 export type Feedback = {
-    message: string,
+    message: string | null,
     type: "message" | "error",
 }
 
